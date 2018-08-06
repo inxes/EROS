@@ -1,4 +1,4 @@
-package com.cindy.eros.admin.service.impl;
+package com.cindy.eros.admin.service;
 
 public interface IConfigService {
 }

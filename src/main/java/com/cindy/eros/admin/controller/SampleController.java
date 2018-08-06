@@ -1,6 +1,5 @@
 package com.cindy.eros.admin.controller;
 
-import com.alibaba.fastjson.parser.DefaultJSONParser;
 import com.baidu.aip.imageclassify.AipImageClassify;
 import com.cindy.eros.admin.model.BaseResponse;
 import org.json.JSONObject;
@@ -16,9 +15,9 @@ import java.util.HashMap;
 @RestController
 public class SampleController {
         //设置APPID/AK/SK
-        public static final String APP_ID = "1578c15cb4b2479d9ac81484548dc59e";
-        public static final String API_KEY = "6a67c0087f1e4d858d999e94388ac32e";
-        public static final String SECRET_KEY = "d5b00705c72d461db5aeebee53b20f06";
+        private static final String APP_ID = "1578c15cb4b2479d9ac81484548dc59e";
+        private static final String API_KEY = "6a67c0087f1e4d858d999e94388ac32e";
+        private static final String SECRET_KEY = "d5b00705c72d461db5aeebee53b20f06";
 
         @PostMapping("/upload")
         @CrossOrigin(origins = "http://localhost:8080")
@@ -51,7 +50,7 @@ public class SampleController {
             }
         }
 
-        public String getImageInfo(String path) {
+        private String getImageInfo(String path) {
             // 初始化一个AipImageClassifyClient
             AipImageClassify client = new AipImageClassify(APP_ID, API_KEY, SECRET_KEY);
 
