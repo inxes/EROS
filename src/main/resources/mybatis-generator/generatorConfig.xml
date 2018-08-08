@@ -34,5 +34,9 @@
             <property name="useActualColumnNames" value="false"/>
         </table>
 
+        <table schema="dadalocal" tableName="secret" domainObjectName="Secret"
+            enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
+            enableSelectByExample="false" selectByExampleQueryId="false">
+        </table>
     </context>
 </generatorConfiguration>

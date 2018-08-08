@@ -7,6 +7,8 @@ import com.cindy.eros.util.JwtUtil;
 import com.cindy.eros.util.MailUtil;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -14,8 +16,12 @@ import java.util.Date;
 @RestController
 @RequestMapping("/auth")
 public class UserController {
+
     @Autowired
     private AdminUserServiceImp adminUserServiceImp;
+
+    @Autowired
+    private StringRedisTemplate redis;
 
     @PostMapping("/logon")
     @CrossOrigin(origins = "http://localhost:8080")
@@ -30,6 +36,9 @@ public class UserController {
         user.setIsBlocked(false);
         user.setIsDeleted(false);
         user.setCreateTime(date);
+        System.out.println("redis:"+user.getId().toString());
+        //存入redis
+        redis.opsForValue().set(user.getId().toString(),"true");
 
         MailUtil mailUtil = new MailUtil();
         mailUtil.sendMile(email,"【EROS】验证邮件","以下为您的验证码，验证码24小时内有效：");
@@ -52,12 +61,14 @@ public class UserController {
                               @RequestParam(value = "pwd",required = false,defaultValue = "") String pwd,
                               @RequestHeader(value = "Authorization",required = false,defaultValue = "") String auth){
         JwtUtil jwtUtil = new JwtUtil();
-        System.out.println(auth.isEmpty());
         if (!auth.isEmpty()){
             Boolean verify = jwtUtil.verifyJwt(auth);
             //jwt校驗
             if(username.isEmpty() && pwd.isEmpty() && verify){
+
                 return BaseResponse.success(auth);
+            }else if(!verify){
+                return BaseResponse.failure(124,"登陆过期，请重新登陆!");
             }
 
         }
@@ -72,6 +83,10 @@ public class UserController {
             Integer id = user.getId();
             try{
                 String token = jwtUtil.createJwt(id);
+
+                System.out.println("redis:"+user.getId().toString());
+                redis.opsForValue().set(id.toString(),"true");
+
                 return BaseResponse.success(token);
             }catch (Exception e){
                 System.out.println(e.getMessage());
