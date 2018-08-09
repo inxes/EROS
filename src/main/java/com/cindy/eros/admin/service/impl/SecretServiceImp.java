@@ -23,4 +23,5 @@ public class SecretServiceImp implements ISecretService {
     public void saveSecret(Secret secret) throws Exception {
         secretMapper.insert(secret);
     }
+
 }

@@ -71,7 +71,6 @@ public class SampleController {
 
             // 调用接口
             JSONObject res = client.advancedGeneral(path, new HashMap<String, String>());
-            System.out.println(res);
             return res.toString();
         }
 }

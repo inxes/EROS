@@ -15,6 +15,7 @@ public class BaseResponse {
         codeMap.put(404,"接口连接失败");
         codeMap.put(415,"接口连接失败！");
         codeMap.put(500,"服务器错误！");
+        codeMap.put(1000,"文件上传失败！");
     }
 
     private String message = "succeed";

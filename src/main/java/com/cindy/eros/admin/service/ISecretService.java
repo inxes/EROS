@@ -12,4 +12,6 @@ import com.cindy.eros.admin.model.Secret;
 public interface ISecretService {
 
     public void saveSecret(Secret secret) throws Exception;
+
+
 }
