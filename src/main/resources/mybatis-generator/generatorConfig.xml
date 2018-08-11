@@ -8,6 +8,8 @@
     <properties resource="application.properties"/>
 
     <context id="mycat_mysql" targetRuntime="MyBatis3" defaultModelType="flat">
+        <property name="mergeable" value="false"/>
+
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
                         connectionURL="${spring.datasource.url}"
                         userId="debian-sys-maint"

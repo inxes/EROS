@@ -64,9 +64,9 @@ public class UserController {
     public BaseResponse login(@RequestParam(value = "username",required = false,defaultValue = "") String username,
                               @RequestParam(value = "pwd",required = false,defaultValue = "") String pwd,
                               @RequestHeader(value = "Authorization",required = false,defaultValue = "") String auth,
-                              HttpServletRequest request){
+                              HttpSession session){
         JwtUtil jwtUtil = new JwtUtil();
-        HttpSession session = request.getSession();
+//        HttpSession session = request.getSession();
 
         if(!username.isEmpty() && !pwd.isEmpty()){
             //數據庫校驗
@@ -76,10 +76,16 @@ public class UserController {
 
             //校验通过，发放token
             if(checkLogin){
+                //存入session
+                session.setAttribute("uid",user.getId());
+                session.setAttribute("session_id",session.getId());
+
+                System.out.println("session_id:"+session.getId());
+                System.out.println("uid"+session.getAttribute("uid"));
                 Integer id = user.getId();
                 try{
                     String token = jwtUtil.createJwt(id);
-                    request.setAttribute(username,request.getRequestedSessionId());
+                    session.setAttribute(username,session.getId());
                     redis.opsForValue().set(id.toString(),"true");
 
                     return BaseResponse.success(token);
@@ -96,9 +102,12 @@ public class UserController {
             Map<String,Claim> map = jwtUtil.verifyJwt(auth);
             //jwt校驗
             if(username.isEmpty() && pwd.isEmpty() && !map.isEmpty()){
+                //校验通过，存储session
                 session.setAttribute("uid",map.get("userid").asInt());
                 session.setAttribute("session_id",session.getId());
 
+                System.out.println("session_id:"+session.getId());
+                System.out.println("uid"+session.getAttribute("uid"));
                 return BaseResponse.success(auth);
             }else if(!map.isEmpty()){
                 return BaseResponse.failure(124,"登陆过期，请重新登陆!");

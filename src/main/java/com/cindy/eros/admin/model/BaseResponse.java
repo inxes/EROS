@@ -15,7 +15,11 @@ public class BaseResponse {
         codeMap.put(404,"接口连接失败");
         codeMap.put(415,"接口连接失败！");
         codeMap.put(500,"服务器错误！");
+        //1000-1100文件工具
         codeMap.put(1000,"文件上传失败！");
+        codeMap.put(1001,"上传文件不能为空！");
+        //1100-1200秘密系统
+        codeMap.put(1100,"发表失败！");
     }
 
     private String message = "succeed";
@@ -94,6 +98,5 @@ public class BaseResponse {
         dataJSon.put("limit",0);
         json.put("data",dataJSon);
         BaseResponse res = JSON.parseObject(json.toJSONString(),BaseResponse.class);
-        System.out.println(res);
     }
 }
