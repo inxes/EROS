@@ -3,6 +3,7 @@ package com.cindy.eros.admin.controller;
 import com.baidu.aip.imageclassify.AipImageClassify;
 import com.cindy.eros.admin.model.BaseResponse;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,10 +15,15 @@ import java.util.HashMap;
 
 @RestController
 public class SampleController {
-        //设置APPID/AK/SK
-        private static final String APP_ID = "1578c15cb4b2479d9ac81484548dc59e";
-        private static final String API_KEY = "6a67c0087f1e4d858d999e94388ac32e";
-        private static final String SECRET_KEY = "d5b00705c72d461db5aeebee53b20f06";
+
+    @Value("${ErosConfig.baiduAI.APP_ID}")
+    private String APP_ID;
+
+    @Value("${ErosConfig.baiduAI.API_KEY}")
+    private String API_KEY;
+
+    @Value("${ErosConfig.baiduAI.SECRET_KEY}")
+    private String SECRET_KEY;
 
         @PostMapping("/upload")
         @CrossOrigin(origins = "http://localhost:8080")
@@ -50,27 +56,28 @@ public class SampleController {
             }
         }
 
-        private String getImageInfo(String path) {
-            // 初始化一个AipImageClassifyClient
-            AipImageClassify client = new AipImageClassify(APP_ID, API_KEY, SECRET_KEY);
 
-            // 可选：设置网络连接参数
-            client.setConnectionTimeoutInMillis(20000);
-            client.setSocketTimeoutInMillis(600000);
+    private String getImageInfo(String path) {
+        // 初始化一个AipImageClassifyClient
+        AipImageClassify client = new AipImageClassify(APP_ID, API_KEY, SECRET_KEY);
 
-            // 可选：设置代理服务器地址, http和socket二选一，或者均不设置
+        // 可选：设置网络连接参数
+        client.setConnectionTimeoutInMillis(20000);
+        client.setSocketTimeoutInMillis(600000);
+
+        // 可选：设置代理服务器地址, http和socket二选一，或者均不设置
 //            client.setHttpProx`y("proxy_host", proxy_port);  // 设置http代理
 //            client.setSocketProxy("proxy_host", proxy_port);  // 设置socket代理
 
-            /*
-            可选：设置log4j日志输出格式，若不设置，则使用默认配置
-            也可以直接通过jvm启动参数设置此环境变量
-            */
+        /*
+        可选：设置log4j日志输出格式，若不设置，则使用默认配置
+        也可以直接通过jvm启动参数设置此环境变量
+        */
 
-            System.setProperty("aip.log4j.conf", "/home/cindy/文档/dada/eros/src/main/resources/log4j.properties");
+        System.setProperty("aip.log4j.conf", "/home/cindy/文档/dada/eros/src/main/resources/log4j.properties");
 
-            // 调用接口
-            JSONObject res = client.advancedGeneral(path, new HashMap<String, String>());
-            return res.toString();
-        }
+        // 调用接口
+        JSONObject res = client.advancedGeneral(path, new HashMap<String, String>());
+        return res.toString();
+    }
 }
