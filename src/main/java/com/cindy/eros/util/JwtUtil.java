@@ -28,7 +28,7 @@ public class JwtUtil {
         Algorithm al = Algorithm.HMAC256(JWT_KEY);
         return JWT.create()
                 .withClaim("userid", userId)
-                .withExpiresAt(new Date(System.currentTimeMillis()+360000))
+                .withExpiresAt(new Date(System.currentTimeMillis()+3600000))
                 .sign(al);
 
     }

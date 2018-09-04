@@ -3,7 +3,6 @@ package com.cindy.eros.admin.controller;
 import com.cindy.eros.admin.model.BaseResponse;
 import com.cindy.eros.admin.model.Secret;
 import com.cindy.eros.admin.service.impl.SecretServiceImp;
-import com.fasterxml.jackson.databind.ser.Serializers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,14 +21,12 @@ import java.util.Date;
 @RequestMapping("/secret")
 public class SecretController {
 
-    @Autowired
-    private SecretServiceImp secretServiceImp;
-
     @PostMapping("/add")
     @CrossOrigin(origins = "http://localhost:8080")
     public BaseResponse addSecret(@RequestParam("content") String content,
                                   @RequestParam(value = "img",required = false,defaultValue = "") String img,
-                                  HttpSession session){
+                                  HttpSession session,
+                                  SecretServiceImp secretServiceImp){
         System.out.println("session_id:"+session.getId());
         System.out.println("uid"+session.getAttribute("uid"));
         Integer uid = Integer.parseInt(session.getAttribute("uid").toString());
@@ -54,12 +51,12 @@ public class SecretController {
     }
 
     @PostMapping("/upload")
-    public BaseResponse upload(MultipartFile file){
+    public BaseResponse upload(MultipartFile file,SecretServiceImp secretServiceImp){
         return secretServiceImp.uploadSecretImg(file);
     }
 
     @PostMapping("/list")
-    public BaseResponse list(){
+    public BaseResponse list(SecretServiceImp secretServiceImp){
         return BaseResponse.success(secretServiceImp.selectSecretLimit(1,10));
     }
 }

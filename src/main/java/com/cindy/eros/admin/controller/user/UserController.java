@@ -1,17 +1,19 @@
-package com.cindy.eros.admin.controller;
+package com.cindy.eros.admin.controller.user;
 
 import com.auth0.jwt.interfaces.Claim;
 import com.cindy.eros.admin.model.AdminUser;
 import com.cindy.eros.admin.model.BaseResponse;
+import com.cindy.eros.admin.mq.impl.MqProducerService;
 import com.cindy.eros.admin.service.impl.AdminUserServiceImp;
 import com.cindy.eros.util.JwtUtil;
 import com.cindy.eros.util.MailUtil;
+import org.apache.activemq.command.ActiveMQQueue;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.jms.Destination;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.Map;
@@ -20,15 +22,13 @@ import java.util.Map;
 @RequestMapping("/auth")
 public class UserController {
 
-    @Autowired
-    private AdminUserServiceImp adminUserServiceImp;
-
-    @Autowired
-    private StringRedisTemplate redis;
-
     @PostMapping("/logon")
     @CrossOrigin(origins = "http://localhost:8080")
-    public BaseResponse logon(@RequestParam("username") String username,@RequestParam("pwd") String pwd,@RequestParam("email") String email){
+    public BaseResponse logon(@RequestParam("username") String username,
+                              @RequestParam("pwd") String pwd,
+                              @RequestParam("email") String email,
+                              AdminUserServiceImp adminUserServiceImp,
+                              StringRedisTemplate redis){
         if (adminUserServiceImp.selectByUsername(username) != null){
             return BaseResponse.failure(120,"注册失败！该账号已被使用");
         }
@@ -64,9 +64,11 @@ public class UserController {
     public BaseResponse login(@RequestParam(value = "username",required = false,defaultValue = "") String username,
                               @RequestParam(value = "pwd",required = false,defaultValue = "") String pwd,
                               @RequestHeader(value = "Authorization",required = false,defaultValue = "") String auth,
-                              HttpSession session){
+                              HttpSession session,
+                              AdminUserServiceImp adminUserServiceImp,
+                              MqProducerService mqProducerService,
+                              StringRedisTemplate redis){
         JwtUtil jwtUtil = new JwtUtil();
-//        HttpSession session = request.getSession();
 
         if(!username.isEmpty() && !pwd.isEmpty()){
             //數據庫校驗
@@ -80,6 +82,8 @@ public class UserController {
                 session.setAttribute("uid",user.getId());
                 session.setAttribute("session_id",session.getId());
 
+                Destination destination = new ActiveMQQueue("mytest.queue");
+                mqProducerService.sendMessage(destination,user.getId().toString());
                 System.out.println("session_id:"+session.getId());
                 System.out.println("uid"+session.getAttribute("uid"));
                 Integer id = user.getId();
@@ -110,11 +114,11 @@ public class UserController {
                 System.out.println("uid"+session.getAttribute("uid"));
                 return BaseResponse.success(auth);
             }else if(!map.isEmpty()){
-                return BaseResponse.failure(124,"登陆过期，请重新登陆!");
+                return BaseResponse.failure(123,"登陆过期，请重新登陆!");
             }
 
         }
-        return BaseResponse.failure(125,"请填写用户名和密码!");
+        return BaseResponse.failure(123,"请填写用户名和密码!");
 
 
 
@@ -123,7 +127,8 @@ public class UserController {
 
     @PostMapping("/checkUsername")
     @CrossOrigin(origins = "http://localhost:8080")
-    public BaseResponse checkUsername(@RequestParam("username") String username){
+    public BaseResponse checkUsername(@RequestParam("username") String username,
+                                      AdminUserServiceImp adminUserServiceImp){
         AdminUser user = adminUserServiceImp.selectByUsername(username);
         if(user == null){
             return BaseResponse.success(false);

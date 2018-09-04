@@ -2,16 +2,20 @@ package com.cindy.eros.admin.model;
 
 import java.util.Date;
 
-public class Secret {
+public class SecretComment {
     private Integer id;
+
+    private Integer principalId;
 
     private Integer userId;
 
+    private Byte type;
+
     private String content;
 
-    private String img;
-
     private Integer likes;
+
+    private Byte status;
 
     private Date createTime;
 
@@ -25,12 +29,28 @@ public class Secret {
         this.id = id;
     }
 
+    public Integer getPrincipalId() {
+        return principalId;
+    }
+
+    public void setPrincipalId(Integer principalId) {
+        this.principalId = principalId;
+    }
+
     public Integer getUserId() {
         return userId;
     }
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public Byte getType() {
+        return type;
+    }
+
+    public void setType(Byte type) {
+        this.type = type;
     }
 
     public String getContent() {
@@ -41,20 +61,20 @@ public class Secret {
         this.content = content == null ? null : content.trim();
     }
 
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img == null ? null : img.trim();
-    }
-
     public Integer getLikes() {
         return likes;
     }
 
     public void setLikes(Integer likes) {
         this.likes = likes;
+    }
+
+    public Byte getStatus() {
+        return status;
+    }
+
+    public void setStatus(Byte status) {
+        this.status = status;
     }
 
     public Date getCreateTime() {

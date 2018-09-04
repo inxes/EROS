@@ -15,11 +15,16 @@ public class BaseResponse {
         codeMap.put(404,"接口连接失败");
         codeMap.put(415,"接口连接失败！");
         codeMap.put(500,"服务器错误！");
+
+        codeMap.put(123,"需登陆！");
         //1000-1100文件工具
         codeMap.put(1000,"文件上传失败！");
         codeMap.put(1001,"上传文件不能为空！");
         //1100-1200秘密系统
         codeMap.put(1100,"发表失败！");
+        codeMap.put(1101,"评论添加失败！");
+        codeMap.put(1102,"操作异常，删除失败！");
+        codeMap.put(1103,"无管理员权限！");
     }
 
     private String message = "succeed";

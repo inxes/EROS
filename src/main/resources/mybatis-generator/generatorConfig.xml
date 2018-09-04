@@ -10,6 +10,11 @@
     <context id="mycat_mysql" targetRuntime="MyBatis3" defaultModelType="flat">
         <property name="mergeable" value="false"/>
 
+        <commentGenerator>
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
                         connectionURL="${spring.datasource.url}"
                         userId="debian-sys-maint"
@@ -18,27 +23,21 @@
 
         <javaModelGenerator targetPackage="com.cindy.eros.admin.model" targetProject="src/main/java">
             <property name="enableSubPackages" value="true" />
+            <property name="mergeable" value="false"/>
             <property name="trimStrings" value="true" />
         </javaModelGenerator>
 
         <sqlMapGenerator targetPackage="/"  targetProject="./src/main/resources/mybatis">
-            <property name="enableSubPackages" value="true" />
+            <property name="mergeable" value="false"/>
         </sqlMapGenerator>
 
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.cindy.eros.admin.dao"  targetProject="src/main/java">
             <property name="enableSubPackages" value="true" />
+            <property name="mergeable" value="false"/>
         </javaClientGenerator>
 
-
-        <table schema="dadalocal" tableName="admin_user" domainObjectName="AdminUser"
-               enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false" >
-            <property name="useActualColumnNames" value="false"/>
-        </table>
-
-        <table schema="dadalocal" tableName="secret" domainObjectName="Secret"
-            enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
-            enableSelectByExample="false" selectByExampleQueryId="false">
+        <table schema="dadalocal" tableName="imageWall" domainObjectName="ImageWall" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
+               enableSelectByExample="false" selectByExampleQueryId="false">
         </table>
     </context>
 </generatorConfiguration>

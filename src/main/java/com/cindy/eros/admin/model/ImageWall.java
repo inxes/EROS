@@ -2,16 +2,14 @@ package com.cindy.eros.admin.model;
 
 import java.util.Date;
 
-public class Secret {
+public class ImageWall {
     private Integer id;
 
     private Integer userId;
 
-    private String content;
-
     private String img;
 
-    private Integer likes;
+    private Byte valid;
 
     private Date createTime;
 
@@ -33,14 +31,6 @@ public class Secret {
         this.userId = userId;
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content == null ? null : content.trim();
-    }
-
     public String getImg() {
         return img;
     }
@@ -49,12 +39,12 @@ public class Secret {
         this.img = img == null ? null : img.trim();
     }
 
-    public Integer getLikes() {
-        return likes;
+    public Byte getValid() {
+        return valid;
     }
 
-    public void setLikes(Integer likes) {
-        this.likes = likes;
+    public void setValid(Byte valid) {
+        this.valid = valid;
     }
 
     public Date getCreateTime() {
